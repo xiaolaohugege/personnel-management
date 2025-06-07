@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.ApplyMapper">
+
+    <select id="getListApply" resultType="com.example.entity.Apply">
+        select ap.*, u.username
+        from apply ap
+        left join user u on ap.userId = u.id
+        <where>
+            <if test="title != null and title != ''">
+                title = #{title}
+            </if>
+            <if test="userId != null">
+                userId = #{userId}
+            </if>
+        </where>
+        order by ap.id desc
+    </select>
+
+
+    <insert id="addApply" parameterType="com.example.entity.Apply">
+        insert into apply
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null"> userId, </if>
+            <if test="title != null"> title, </if>
+            <if test="content != null"> content, </if>
+            <if test="time != null"> time, </if>
+            <if test="status != null"> status, </if>
+            <if test="reason != null"> reason </if>
+            <!--  其他字段  -->
+        </trim>
+        <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+            <if test="userId != null"> #{userId}, </if>
+            <if test="title != null"> #{title}, </if>
+            <if test="content != null"> #{content}, </if>
+            <if test="time != null"> #{time}, </if>
+            <if test="status != null"> #{status}, </if>
+            <if test="reason != null"> #{reason} </if>
+            <!--  其他字段对应的值  -->
+        </trim>
+    </insert>
+
+    <select id="selectApply" resultType="com.example.entity.Apply">
+        select * from admin
+        <where>
+            <if test="username != null">
+                username = #{username}
+            </if>
+            <if test="name != null">
+                and name like concat('%', #{name}, '%')
+            </if>  <!-- 相当于 name like '%1%' -->
+        </where>
+        order by id desc
+    </select>
+
+    <update id="update" parameterType="com.example.entity.Apply">
+        update apply
+        <set>
+            <if test="userId != null"> userId = #{userId}, </if>
+            <if test="title != null"> title = #{title}, </if>
+            <if test="content != null"> content = #{content}, </if>
+            <if test="time != null"> time = #{time}, </if>
+            <if test="status != null"> status = #{status}, </if>
+            <if test="reason != null"> reason = #{reason} </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <delete id="deleteApplyById">
+        delete from apply where id = #{id}
+    </delete>
+
+    <select id="selectById" parameterType="java.lang.String" resultType="com.example.entity.Apply">
+        select * from admin where id=#{id}
+    </select>
+</mapper>
