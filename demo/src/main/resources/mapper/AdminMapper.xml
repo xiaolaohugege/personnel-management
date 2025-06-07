@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.AdminMapper">
+
+<!--    <select id="getListAdmin" resultType="com.example.entity.Admin">-->
+<!--        select * from admin-->
+<!--        <where>-->
+<!--            <if test="username"></if>-->
+<!--        </where>-->
+<!--    </select>-->
+
+    <select id="selectAdminById" resultType="com.example.entity.Admin">
+        select * from admin where id = #{id}
+    </select>
+
+    <insert id="addAdmin" parameterType="com.example.entity.Admin">
+        insert into admin
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="username!= null">
+                username,
+            </if>
+            <if test="name!= null">
+                name,
+            </if>
+            <if test="password!= null">
+                password,
+            </if>
+            <if test="phone!= null">
+                phone,
+            </if>
+            <if test="email!= null">
+                email,
+            </if>
+            <if test="role!= null">
+                role,
+            </if>
+            <if test="avatar!= null">
+                avatar,
+            </if>
+            <!-- 其他字段 -->
+        </trim>
+        <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+            <if test="username!= null">
+                #{username},
+            </if>
+            <if test="name!= null">
+                #{name},
+            </if>
+            <if test="password!= null">
+                #{password},
+            </if>
+            <if test="phone!= null">
+                #{phone},
+            </if>
+            <if test="email!= null">
+                #{email},
+            </if>
+            <if test="role!= null">
+                #{role},
+            </if>
+            <!-- 其他字段对应的值 -->
+        </trim>
+    </insert>
+    <update id="update" parameterType="com.example.entity.Admin">
+        update admin
+        <set>
+            <if test="username != null">
+                username = #{username},
+            </if>
+            <if test="name != null">
+                name = #{name},
+            </if>
+            <if test="password != null">
+                password =#password}
+            </if>
+            <if test="phone != null">
+                phone = #{phone},
+            </if>
+            <if test="email != null">
+                email = #{email},
+            </if>
+            <if test="avatar != null">
+                avatar = #{avatar}
+            </if>
+        </set>
+        where id= #{id,jdbcType=BIGINT}
+    </update>
+    <select id="selectAdmin" resultType="com.example.entity.Admin">
+        select * from admin
+        <where>
+            <if test="username != null">
+                username = #{username}
+            </if>
+            <if test="name != null">
+                and name like concat('%', #{name}, '%')
+            </if>  <!-- 相当于 name like '%1%' -->
+        </where>
+        order by id desc
+    </select>
+
+    <delete id="deleteAdminById">
+        delete from admin where id = #{id}
+    </delete>
+
+    <select id="getListAdmin" resultType="com.example.entity.Admin">
+        select * from admin
+        <where>
+            <if test="username != null">
+                username like concat('%', #{username}, '%')
+            </if>
+            <if test="name != null">
+                and name like concat('%', #{name}, '%')
+            </if>  <!-- 相当于 name like '%1%' -->
+            <if test="ids != null and ids != ''">
+                and id in
+                <foreach collection="idsArr" open="(" close=")" separator="," item="id">
+                    #{id}
+                </foreach>
+            </if>
+        </where>
+        order by id desc
+    </select>
+
+    <select id="selectAdminByName" parameterType="java.lang.String" resultType="com.example.entity.Admin">
+        select * from admin where username=#{username}
+    </select>
+
+
+
+    <!--    <delete id="deleteBatch">-->
+<!--    </delete>-->
+
+</mapper>
+
+
